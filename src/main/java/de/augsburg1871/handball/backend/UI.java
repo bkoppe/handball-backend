@@ -60,6 +60,9 @@ public class UI extends com.vaadin.ui.UI implements ViewDisplay {
 		menu.addComponent(menuPart);
 
 		content = new VerticalLayout();
+		content.setSizeFull();
+		content.setSpacing(false);
+		content.setMargin(false);
 		content.addComponent(new Label("Hello World!"));
 
 		horizontalLayout.addComponents(menu, content);
@@ -68,6 +71,7 @@ public class UI extends com.vaadin.ui.UI implements ViewDisplay {
 		setContent(horizontalLayout);
 
 		getNavigator().navigateTo(MembersView.VIEW_NAME);
+		// getNavigator().navigateTo("scroll");
 	}
 
 	private void addMenuItem(final Button menuItem, final ClickListener clickListener) {
@@ -83,8 +87,6 @@ public class UI extends com.vaadin.ui.UI implements ViewDisplay {
 	@Override
 	public void showView(final View view) {
 		content.removeAllComponents();
-		content.setSpacing(false);
-		content.setMargin(false);
 		content.addComponent((Component) view);
 	}
 

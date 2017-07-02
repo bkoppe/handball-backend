@@ -4,9 +4,9 @@ import static java.time.Month.APRIL;
 import static java.time.Month.DECEMBER;
 
 import java.time.LocalDate;
+import java.util.List;
 
-import javax.annotation.PostConstruct;
-
+import com.google.common.collect.Lists;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -14,7 +14,9 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -29,9 +31,30 @@ public class MembersView extends VerticalLayout implements View {
 
 	public static final String VIEW_NAME = "members";
 
-	@PostConstruct
-	void initLayout() {
-		addComponents(topBar(),
+	public MembersView() {
+		setSizeFull();
+		addComponent(topBar());
+		final Component personsPanel = personsPanel();
+		addComponent(personsPanel);
+		setExpandRatio(personsPanel, 1);
+	}
+
+	private Component personsPanel() {
+		final Panel root = new Panel();
+		root.setSizeFull();
+		root.addStyleName(ValoTheme.PANEL_BORDERLESS);
+		final VerticalLayout list = new VerticalLayout();
+		list.setMargin(new MarginInfo(false, true, false, false));
+		for (final Component component : persons()) {
+			list.addComponent(component);
+		}
+		root.setContent(list);
+		root.setSizeFull();
+		return root;
+	}
+
+	private List<Component> persons() {
+		return Lists.newArrayList(
 				new PersonComponent(PersonBuilder.createWith("Mustermann", "Max", LocalDate.of(2000, DECEMBER, 7))),
 				new PersonComponent(PersonBuilder.createWith("Maier", "Peter", LocalDate.of(1988, APRIL, 12))),
 				new PersonComponent(PersonBuilder.createWith("Mustermann", "Max", LocalDate.of(2000, DECEMBER, 7))),
@@ -60,7 +83,7 @@ public class MembersView extends VerticalLayout implements View {
 
 	private HorizontalLayout topBar() {
 		final HorizontalLayout root = new HorizontalLayout();
-		root.setSizeFull();
+		root.setWidth(100, Unit.PERCENTAGE);
 
 		final TextField searchField = new TextField();
 		searchField.setPlaceholder("Nach Vor- oder Nachnamen suchen...");
